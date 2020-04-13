@@ -1,0 +1,143 @@
+{% load static %}
+{% block content %}
+<html>
+ <head>
+  <meta name="referrer" content="origin">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="stylesheet" type="text/css" href="{% static 'css/style.css' %}">
+        <link rel="shortcut icon" href="favicon.ico">
+        <link rel="alternate" type="application/rss+xml" title="RSS" href="rss">
+        <title>Hacker News</title>
+      </head>
+      <body>
+        <center>
+          <table id="hnmain" width="85%" cellspacing="0" cellpadding="0" border="0" bgcolor="#f6f6ef">
+        <tbody>
+          <tr>
+            <td bgcolor="#ff6600">
+              <table style="padding:2px" width="100%" cellspacing="0" cellpadding="0" border="0">
+                <tbody>
+                  <tr>
+                    <td style="width:18px;padding-right:4px">
+                      <a href="/">
+                        <img src="https://news.ycombinator.com/y18.gif" width="18" height="18" style="border:1px #ffffff solid">
+                      </a>
+                    </td>
+                    <td style="line-height:12pt; height:10px;">
+                    <span class="pagetop">
+                      <b class="hnname">
+                        <a href="/">Hacker News</a>
+                      </b>
+                      <a href="new">new</a> |
+                      <a href="/">past</a> |
+                      <a href="ask">ask</a> |
+                      <a href="/">show</a> |
+                      <a href="/">jobs</a> |
+                      <a href="submit">submit</a>
+                    </span>
+                  </td>
+
+                  <td style="text-align:right;padding-right:4px;">
+                    {% if user.username %}
+                    <a href="/user/{{user.id}}">{{user.username}}</a> |
+                    <a href="{% url 'logout' %}">Logout</a>
+                    {% else %}
+                    <a class="btn btn-primary" href="{% url 'social:begin' 'google-oauth2' %}">login</a>
+                    {% endif %}
+                    <span class="pagetop">
+                    </span>
+                  </td>
+              </tr>
+            </tbody>
+          </table>
+        </td>
+      </tr>
+      <tr id="pagespace" title="" style="height:10px"></tr>
+      <tr>
+        <td>
+          <table width="100%" cellspacing="0" cellpadding="1"><tbody>
+            <tr>
+              <td bgcolor="#ff6600"></td>
+            </tr>
+            <tr style="height:10px"></tr>
+            <tr>
+              <td>
+                <table class="itemlist" cellpadding="0" cellspacing="0" border="0">
+                  <tbody>
+                {% if lista %}
+                {% for submit in lista %}
+                <tr class="athing">
+                  <td align="right" valign="top" class="title">
+                    <span class="rank">{{ forloop.counter }}.</span>
+                  </td>
+                  <td valign="top" class="votelinks">
+                    <center>
+                      <a href="/like/?pk={{submit.id}}&path=index" id="up_{{submit.id}}">
+                        <div class="votearrow" title="upvote" ></div>
+                      </a>
+                    </center>
+                  </td>
+                  <td class="title">
+                    {% if submit.url %}
+                    <a href="http://{{submit.url}}" class="storylink" rel="nofolllow">{{ submit.title }} </a>
+                    <span class="sitebit comhead">(<a href="/?path={{submit.path}}"><span class="sitestr">{{submit.path}}</span>)</span>
+                    {% else %}
+                    <a href="/item/{{submit.id}}" class="storylink" rel="nofolllow"> Ask HN: {{ submit.title }} </a>
+                    {% endif %}
+                    </td>
+                  </tr>
+                  <tr>
+                    <td colspan="2"></td>
+                    <td class="subtext">
+                      <span class="score"> {{submit.likes}} likes by</span>
+                      <a href="/user/{{submit.author.id}}" class="hnuser"> {{submit.author}}</a>
+                    <span class="age"> <a href="/item/{{submit.id}}">{{submit.date_added | timesince }} ago </a></span> |
+                    <span class="age"> <a href="/dislike/?pk={{submit.id}}&path=index"> unvote </a></span> |
+                    <span id="un_{{submit.id}}"></span>
+                    <span> <a href="/item/{{submit.id}}">{{submit.qttcom}} comments</a></span>
+                  </td>
+                </tr>
+                <tr class="spacer" style="height:5px"></tr>
+                {% endfor %}
+                {% else %}
+                <p>There are no submits in the page.</p>
+                {% endif %}
+              </tbody>
+            </table>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+    <br>
+    <center>
+    <a href="https://www.ycombinator.com/apply/">
+        Applications are open for YC Summer 2020
+      </a>
+    </center>
+    <br>
+    <center>
+      <span class="yclinks"><a href="newsguidelines.html">Guidelines</a>
+        | <a href="newsfaq.html">FAQ</a>
+        | <a href="mailto:hn@ycombinator.com">Support</a>
+        | <a href="https://github.com/HackerNews/API">API</a>
+        | <a href="security.html">Security</a>
+        | <a href="lists">Lists</a>
+        | <a href="bookmarklet.html" rel="nofollow">Bookmarklet</a>
+        | <a href="http://www.ycombinator.com/legal/">Legal</a>
+        | <a href="http://www.ycombinator.com/apply/">Apply to YC</a>
+        | <a href="mailto:hn@ycombinator.com">Contact</a>
+      </span>
+      <br>
+      <br>
+      <form method="get" action="//hn.algolia.com/">Search:
+          <input type="text" name="q" value="" size="17" autocorrect="off" spellcheck="false" autocapitalize="off" autocomplete="false"></form>
+            </center>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </center>
+</body>
+</html>
+
+{% endblock %}
